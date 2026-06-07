@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Frapper Kits</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,900&family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html{overflow-x:hidden;}
+body{font-family:'DM Sans',sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;overflow-x:hidden;}
+:root{--green:#00c853;--green-dark:#00a844;--black:#0a0a0a;--white:#ffffff;--muted:#888;}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(10,10,10,0.93);backdrop-filter:blur(8px);border-bottom:1px solid #1a1a1a;padding:0.7rem 2rem 0;}
+.header-inner{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;gap:1rem;flex-wrap:wrap;}
+.hlogo{font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:900;font-style:italic;color:#fff;letter-spacing:1px;line-height:1;white-space:nowrap;}
+.lang-group{display:flex;border:1px solid #333;border-radius:999px;overflow:hidden;}
+.lang-opt{background:transparent;border:none;color:#888;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;padding:7px 12px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.lang-opt:hover{color:#fff;}
+.lang-opt.active{background:#222;color:#fff;}
+.lang-sep{width:1px;background:#333;align-self:stretch;}
+.wa-btn{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:var(--black);font-weight:600;font-size:14px;padding:10px 20px;border-radius:999px;text-decoration:none;transition:background 0.2s;white-space:nowrap;}
+.wa-btn:hover{background:var(--green-dark);}
+.wa-btn svg{width:18px;height:18px;flex-shrink:0;}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-bottom:1rem;}
+.filter-btn{padding:7px 16px;border-radius:999px;border:1px solid #333;background:transparent;color:#aaa;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.15s;}
+.filter-btn:hover{border-color:#555;color:#fff;}
+.filter-btn.active{background:var(--green);border-color:var(--green);color:var(--black);font-weight:600;}
+.search-wrap{margin-left:auto;position:relative;}
+.search-wrap input{padding:8px 14px 8px 36px;border-radius:999px;border:1px solid #333;background:#111;color:#fff;font-size:13px;font-family:'DM Sans',sans-serif;width:200px;}
+.search-wrap input::placeholder{color:#555;}
+.search-wrap input:focus{outline:none;border-color:var(--green);}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#555;pointer-events:none;}
+
+/* HERO */
+.hero{position:relative;width:100%;height:100vh;height:100dvh;min-height:560px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;z-index:0;}
+.hero-slide{position:absolute;inset:0;background-size:cover;background-position:center top;opacity:0;transition:opacity 2s ease-in-out;filter:brightness(0.25) grayscale(1);animation:kbzoom 16s ease-in-out infinite alternate;}
+.hero-slide.active{opacity:1;}
+@keyframes kbzoom{from{transform:scale(1);}to{transform:scale(1.06);}}
+.hero-grad{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(10,10,10,0.1) 0%,rgba(10,10,10,0.4) 60%,rgba(10,10,10,1) 100%);}
+.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:1.2rem;text-align:center;padding:0 1rem;}
+.hero-sub{font-family:'DM Sans',sans-serif;font-size:13px;color:#888;letter-spacing:3px;text-transform:uppercase;}
+.hero-cta{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#000;font-weight:700;font-size:14px;padding:13px 32px;border-radius:999px;border:none;cursor:pointer;letter-spacing:1px;font-family:'DM Sans',sans-serif;transition:background 0.2s,transform 0.15s;}
+.hero-cta:hover{background:var(--green-dark);transform:scale(1.03);}
+.hero-arrow{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:2;color:#444;animation:arrbounce 2s ease-in-out infinite;}
+@keyframes arrbounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
+
+/* CATALOG */
+#catalog{position:relative;background:#0a0a0a;}
+.cat-glow{position:absolute;inset:-50px;pointer-events:none;z-index:0;background:radial-gradient(ellipse 55% 40% at 15% 35%,rgba(0,200,83,0.06) 0%,transparent 70%),radial-gradient(ellipse 50% 45% at 85% 65%,rgba(0,200,83,0.05) 0%,transparent 70%);animation:glowmove 12s ease-in-out infinite alternate;}
+@keyframes glowmove{0%{transform:translate(0,0) scale(1);}50%{transform:translate(25px,-15px) scale(1.04);}100%{transform:translate(-15px,20px) scale(0.97);}}
+#catalog .count,#catalog .grid{position:relative;z-index:1;}
+main{padding:2rem;}
+.count{font-size:13px;color:var(--muted);margin-bottom:1.2rem;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;}
+.card{background:#111;border:1px solid #222;border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color 0.15s,transform 0.15s;}
+.card:hover{border-color:var(--green);transform:translateY(-3px);}
+.card-img-wrap{width:100%;height:190px;overflow:hidden;background:#1a1a1a;}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s;}
+.card:hover .card-img-wrap img{transform:scale(1.06);}
+.card-placeholder{width:100%;height:100%;display:none;align-items:center;justify-content:center;color:#333;font-size:2rem;}
+.card-body{padding:10px 12px 12px;}
+.card-title{font-size:13px;font-weight:500;color:#eee;line-height:1.3;margin-bottom:4px;}
+.card-cat{font-size:11px;color:var(--muted);}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:999px;margin-top:6px;font-weight:600;}
+.badge-home{background:#0a2e1a;color:#00c853;}
+.badge-away{background:#0a1a2e;color:#4da6ff;}
+.badge-third{background:#2e1f0a;color:#ffb347;}
+.badge-other{background:#1e1e1e;color:#aaa;}
+.lightbox{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;padding:1rem;}
+.lightbox.open{display:flex;}
+.lightbox-inner{background:#111;border:1px solid #222;border-radius:16px;max-width:480px;width:100%;overflow:hidden;position:relative;}
+.lightbox-img{width:100%;max-height:440px;object-fit:contain;background:#1a1a1a;display:block;}
+.lightbox-body{padding:1.2rem;}
+.lightbox-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;margin-bottom:4px;}
+.lightbox-cat{font-size:13px;color:var(--muted);margin-bottom:1rem;}
+.lightbox-wa{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:var(--black);font-weight:600;font-size:14px;padding:11px 22px;border-radius:999px;text-decoration:none;transition:background 0.2s;width:100%;justify-content:center;}
+.lightbox-wa:hover{background:var(--green-dark);}
+.lightbox-close{position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.6);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
+.lightbox-close:hover{background:rgba(255,255,255,0.15);}
+.empty{text-align:center;padding:4rem;color:var(--muted);font-size:15px;}
+footer{text-align:center;padding:1.5rem 2rem;color:#444;font-size:12px;border-top:1px solid #1a1a1a;line-height:1.8;}
+footer .founders{color:#666;font-size:13px;margin-bottom:4px;}
+footer .founders span{color:var(--green);font-weight:600;}
+@media(max-width:600px){header{padding:0.6rem 1rem 0;}.hlogo{font-size:1.3rem;}main{padding:1.2rem 1rem;}.grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}.search-wrap input{width:120px;}.wa-btn span{display:none;}.wa-btn{padding:10px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="hlogo">FRAPPER<br>KITS</div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <div class="lang-group">
+        <button class="lang-opt active" onclick="setLang('es')">🇪🇸 ES</button>
+        <div class="lang-sep"></div>
+        <button class="lang-opt" onclick="setLang('en')">🇬🇧 EN</button>
+        <div class="lang-sep"></div>
+        <button class="lang-opt" onclick="setLang('gr')">🇬🇷 GR</button>
+      </div>
+      <a class="wa-btn" href="https://www.instagram.com/FrapperKits" target="_blank" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);border:none;">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        <span>@FrapperKits</span>
+      </a>
+    </div>
+  </div>
+  <div class="filters">
+    <button class="filter-btn active" onclick="filter('all',this)">Todas</button>
+    <button class="filter-btn" onclick="filter('clubes2627',this)">Clubes 26-27</button>
+    <button class="filter-btn" onclick="filter('clubes2526',this)">Clubes 25-26</button>
+    <button class="filter-btn" onclick="filter('mundial',this)">Mundial 2026</button>
+    <button class="filter-btn" onclick="filter('retro',this)">Retro</button>
+    <div class="search-wrap">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar equipo..." oninput="doSearch(this.value)"/>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-grad"></div>
+  <div class="hero-content">
+    <svg viewBox="0 0 520 230" xmlns="http://www.w3.org/2000/svg" style="height:180px;width:auto;">
+      <text text-anchor="middle" x="260" y="112" font-family="'Barlow Condensed',sans-serif" font-size="110" font-weight="900" font-style="italic" fill="white" letter-spacing="-2">FRAPPER</text>
+      <text text-anchor="middle" x="260" y="222" font-family="'Barlow Condensed',sans-serif" font-size="110" font-weight="900" font-style="italic" fill="white" letter-spacing="-2">KITS</text>
+    </svg>
+    <p class="hero-sub" id="heroSub">Tu tienda de camisetas de fútbol</p>
+    <button class="hero-cta" id="heroCta" onclick="smoothScroll()">Ver catálogo ↓</button>
+  </div>
+  <div class="hero-arrow">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</div>
+
+<main id="catalog">
+  <div class="cat-glow"></div>
+  <div class="count" id="count"></div>
+  <div class="grid" id="grid"></div>
+</main>
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img class="lightbox-img" id="lb-img" src="" alt=""/>
+    <div class="lightbox-body">
+      <div class="lightbox-title" id="lb-title"></div>
+      <div class="lightbox-cat" id="lb-cat"></div>
+      <div style="margin-bottom:1rem;">
+        <p id="lb-sizes-title" style="font-size:11px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Tallas disponibles</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span style="padding:4px 10px;border:1px solid #333;border-radius:999px;font-size:12px;color:#aaa;">S</span>
+          <span style="padding:4px 10px;border:1px solid #333;border-radius:999px;font-size:12px;color:#aaa;">M</span>
+          <span style="padding:4px 10px;border:1px solid #333;border-radius:999px;font-size:12px;color:#aaa;">L</span>
+          <span style="padding:4px 10px;border:1px solid #333;border-radius:999px;font-size:12px;color:#aaa;">XL</span>
+          <span style="padding:4px 10px;border:1px solid #333;border-radius:999px;font-size:12px;color:#aaa;">2XL</span>
+          <span style="padding:4px 10px;border:1px solid #00c853;border-radius:999px;font-size:12px;color:#00c853;">3XL</span>
+          <span style="padding:4px 10px;border:1px solid #00c853;border-radius:999px;font-size:12px;color:#00c853;">4XL</span>
+        </div>
+        <p id="lb-sizes-note" style="font-size:10px;color:#444;margin-top:6px;">3XL y 4XL solo versión Fan/Retro</p>
+      </div>
+      <a class="lightbox-wa" href="https://www.instagram.com/FrapperKits" target="_blank" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);border:none;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        <span id="lb-wa-text">@FrapperKits</span>
+      </a>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="founders" id="foundersText">Fundadores: <span>Lucca &amp; Tasos</span></div>
+  <div id="footerText">© 2026 Catálogo Camisas Fútbol · Todos los derechos reservados</div>
+</footer>
+
+
+<section id="sizes" style="padding:2rem;border-top:1px solid #1a1a1a;max-width:900px;margin:0 auto;">
+  <div style="display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;">
+    <button onclick="showSize('player')" id="btn-player" style="padding:8px 20px;border-radius:999px;border:1px solid #333;background:transparent;color:#aaa;font-weight:600;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;">Versión Player</button>
+    <button onclick="showSize('fans')" id="btn-fans" style="padding:8px 20px;border-radius:999px;border:1px solid #00c853;background:#00c853;color:#000;font-weight:600;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;">Versión Fan / Retro</button>
+  </div>
+
+  <div id="table-fans">
+    <p style="font-size:12px;color:#666;margin-bottom:1rem;">* Puede haber un margen de 1-2 cm por la elasticidad del tejido.</p>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;font-family:'DM Sans',sans-serif;">
+      <thead><tr style="background:#111;">
+        <th style="padding:10px 12px;text-align:left;color:#aaa;font-weight:500;border-bottom:1px solid #222;min-width:130px;">Medida</th>
+        <th style="padding:10px 12px;text-align:center;color:#fff;font-weight:600;border-bottom:1px solid #222;">S</th>
+        <th style="padding:10px 12px;text-align:center;color:#fff;font-weight:600;border-bottom:1px solid #222;">M</th>
+        <th style="padding:10px 12px;text-align:center;color:#fff;font-weight:600;border-bottom:1px solid #222;">L</th>
+        <th style="padding:10px 12px;text-align:center;color:#fff;font-weight:600;border-bottom:1px solid #222;">XL</th>
+        <th style="padding:10px 12px;text-align:center;color:#fff;font-weight:600;border-bottom:1px solid #222;">2XL</th>
+        <th style="padding:10px 12px;text-align:center;color:#fff;font-weight:600;border-bottom:1px solid #222;">3XL</th>
+        <th style="padding:10px 12px;text-align:center;color:#fff;font-weight:600;border-bottom:1px solid #222;">4XL</th>
+      </tr></thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #1a1a1a;"><td style="padding:10px 12px;color:#aaa;">Altura (CM)</td><td style="padding:10px 12px;text-align:center;color:#eee;">160–170</td><td style="padding:10px 12px;text-align:center;color:#eee;">170–175</td><td style="padding:10px 12px;text-align:center;color:#eee;">175–180</td><td style="padding:10px 12px;text-align:center;color:#eee;">180–185</td><td style="padding:10px 12px;text-align:center;color:#eee;">185–190</td><td style="padding:10px 12px;text-align:center;color:#eee;">190–195</td><td style="padding:10px 12px;text-align:center;color:#eee;">190–199</td></tr>
+        <tr style="border-bottom:1px solid #1a1a1a;background:#0d0d0d;"><td style="padding:10px 12px;color:#aaa;">Peso (KG)</td><td style="padding:10px 12px;text-align:center;color:#eee;">60–65</td><td style="padding:10px 12px;text-align:center;color:#eee;">66–70</td><td style="padding:10px 12px;text-align:center;color:#eee;">71–75</td><td style="padding:10px 12px;text-align:center;color:#eee;">76–80</td><td style="padding:10px 12px;text-align:center;color:#eee;">81–87</td><td style="padding:10px 12px;text-align:center;color:#eee;">88–95</td><td style="padding:10px 12px;text-align:center;color:#eee;">96–105</td></tr>
+        <tr style="border-bottom:1px solid #1a1a1a;"><td style="padding:10px 12px;color:#aaa;">Largo camiseta</td><td style="padding:10px 12px;text-align:center;color:#eee;">71cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">73cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">75cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">77cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">81cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">83cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">85cm</td></tr>
+        <tr style="border-bottom:1px solid #1a1a1a;background:#0d0d0d;"><td style="padding:10px 12px;color:#aaa;">Pecho</td><td style="padding:10px 12px;text-align:center;color:#eee;">50cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">52cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">54cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">56cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">59cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">61cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">63cm</td></tr>
+        <tr style="border-bottom:1px solid #1a1a1a;"><td style="padding:10px 12px;color:#aaa;">Manga corta</td><td style="padding:10px 12px;text-align:center;color:#eee;">36.5cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">38cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">39.5cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">41cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">42cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">43cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">44cm</td></tr>
+        <tr style="background:#0d0d0d;"><td style="padding:10px 12px;color:#aaa;">Manga larga</td><td style="padding:10px 12px;text-align:center;color:#eee;">75.5cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">77cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">78.5cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">80cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">81cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">82cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">83cm</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div id="table-player" style="display:none;">
+    <p style="font-size:12px;color:#666;margin-bottom:1rem;">* Puede haber un margen de 1-2 cm. La versión Player tiene corte más ajustado — talla una talla más de lo normal.</p>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;font-family:'DM Sans',sans-serif;">
+      <thead><tr style="background:#111;">
+        <th style="padding:10px 12px;text-align:left;color:#aaa;font-weight:500;border-bottom:1px solid #222;min-width:130px;">Medida</th>
+        <th style="padding:10px 12px;text-align:center;color:#fff;font-weight:600;border-bottom:1px solid #222;">S</th>
+        <th style="padding:10px 12px;text-align:center;color:#fff;font-weight:600;border-bottom:1px solid #222;">M</th>
+        <th style="padding:10px 12px;text-align:center;color:#fff;font-weight:600;border-bottom:1px solid #222;">L</th>
+        <th style="padding:10px 12px;text-align:center;color:#fff;font-weight:600;border-bottom:1px solid #222;">XL</th>
+        <th style="padding:10px 12px;text-align:center;color:#fff;font-weight:600;border-bottom:1px solid #222;">2XL</th>
+      </tr></thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #1a1a1a;"><td style="padding:10px 12px;color:#aaa;">Altura (CM)</td><td style="padding:10px 12px;text-align:center;color:#eee;">160–165</td><td style="padding:10px 12px;text-align:center;color:#eee;">165–170</td><td style="padding:10px 12px;text-align:center;color:#eee;">170–175</td><td style="padding:10px 12px;text-align:center;color:#eee;">175–185</td><td style="padding:10px 12px;text-align:center;color:#eee;">185–190</td></tr>
+        <tr style="border-bottom:1px solid #1a1a1a;background:#0d0d0d;"><td style="padding:10px 12px;color:#aaa;">Peso (KG)</td><td style="padding:10px 12px;text-align:center;color:#eee;">55–60</td><td style="padding:10px 12px;text-align:center;color:#eee;">60–70</td><td style="padding:10px 12px;text-align:center;color:#eee;">70–80</td><td style="padding:10px 12px;text-align:center;color:#eee;">80–92.5</td><td style="padding:10px 12px;text-align:center;color:#eee;">90–95</td></tr>
+        <tr style="border-bottom:1px solid #1a1a1a;"><td style="padding:10px 12px;color:#aaa;">Largo camiseta</td><td style="padding:10px 12px;text-align:center;color:#eee;">70cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">72cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">74cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">76cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">78cm</td></tr>
+        <tr style="border-bottom:1px solid #1a1a1a;background:#0d0d0d;"><td style="padding:10px 12px;color:#aaa;">Pecho</td><td style="padding:10px 12px;text-align:center;color:#eee;">46cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">48cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">50cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">52cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">54cm</td></tr>
+        <tr style="border-bottom:1px solid #1a1a1a;"><td style="padding:10px 12px;color:#aaa;">Hombro</td><td style="padding:10px 12px;text-align:center;color:#eee;">40.5cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">41.9cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">43.3cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">44.7cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">46.1cm</td></tr>
+        <tr style="background:#0d0d0d;"><td style="padding:10px 12px;color:#aaa;">Manga</td><td style="padding:10px 12px;text-align:center;color:#eee;">24cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">24.8cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">25.6cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">26.4cm</td><td style="padding:10px 12px;text-align:center;color:#eee;">27.2cm</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;">
+    <p style="font-size:13px;color:#666;font-weight:600;margin-bottom:1rem;text-transform:uppercase;letter-spacing:1px;">Diferencias entre versiones</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div style="background:#111;border:1px solid #222;border-radius:12px;padding:1rem;">
+        <p style="font-size:12px;color:#00c853;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Versión Player</p>
+        <ul style="list-style:none;font-size:13px;color:#aaa;line-height:2;">
+          <li>✓ Corte ajustado</li><li>✓ Alta transpirabilidad</li><li>✓ Muy ligera</li><li>✓ Tecnología VaporKnit</li><li>✓ Logos termopegados</li><li>✓ Tallas S–2XL</li>
+        </ul>
+      </div>
+      <div style="background:#111;border:1px solid #222;border-radius:12px;padding:1rem;">
+        <p style="font-size:12px;color:#00c853;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Versión Fan / Retro</p>
+        <ul style="list-style:none;font-size:13px;color:#aaa;line-height:2;">
+          <li>✓ Corte más holgado</li><li>✓ Algo de transpirabilidad</li><li>✓ Escudos bordados</li><li>✓ Tecnología Dri-FIT</li><li>✓ Tallas hasta 4XL</li><li>✓ La más popular</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+const WA='695449113';
+const DRIVE_IMG=id=>`https://lh3.googleusercontent.com/d/${id}=w800`;
+const T={
+  es:{logo:'Camisas⚽Fútbol',heroCta:'Ver catálogo ↓',heroSub:'Tu tienda de camisetas de fútbol',sizesTitle:'Tallas disponibles',sizesNote:'3XL y 4XL solo versión Fan/Retro',waHeader:'Consultar por WhatsApp',waHeaderMsg:'Hola! Vi tu catálogo y me interesa una camisa 👕',waItem:'Quiero esta camisa',waItemMsg:'Hola! Me interesa la camisa: ',search:'Buscar equipo...',countSuffix:'camisetas',footer:'© 2026 Catálogo Camisas Fútbol · Todos los derechos reservados',founders:'Fundadores:',cats:{all:'Todas',clubes2627:'Clubes 26-27',clubes2526:'Clubes 25-26',mundial:'Mundial 2026',retro:'Retro'},catLabels:{clubes2627:'Clubes 26-27',clubes2526:'Clubes 25-26',mundial:'Mundial 2026',retro:'Retro'},badges:{home:'Local',away:'Visitante',third:'3era',other:'Especial'},empty:'No se encontraron camisetas'},
+  en:{logo:'Football⚽Shirts',heroCta:'View catalog ↓',heroSub:'Your football shirt store',sizesTitle:'Available sizes',sizesNote:'3XL and 4XL Fan/Retro version only',waHeader:'Contact on WhatsApp',waHeaderMsg:"Hi! I saw your catalog and I'm interested in a jersey 👕",waItem:'I want this jersey',waItemMsg:"Hi! I'm interested in the jersey: ",search:'Search team...',countSuffix:'jerseys',footer:'© 2026 Football Jersey Catalog · All rights reserved',founders:'Founders:',cats:{all:'All',clubes2627:'Clubs 26-27',clubes2526:'Clubs 25-26',mundial:'World Cup 2026',retro:'Retro'},catLabels:{clubes2627:'Clubs 26-27',clubes2526:'Clubs 25-26',mundial:'World Cup 2026',retro:'Retro'},badges:{home:'Home',away:'Away',third:'3rd Kit',other:'Special'},empty:'No jerseys found'},
+  gr:{logo:'Φανέλες⚽Ποδοσφαίρου',heroCta:'Δες τον κατάλογο ↓',heroSub:'Το κατάστημα φανελών σου',sizesTitle:'Διαθέσιμα μεγέθη',sizesNote:'3XL και 4XL μόνο έκδοση Fan/Retro',waHeader:'Επικοινωνία στο WhatsApp',waHeaderMsg:'Γεια! Είδα τον κατάλογο και με ενδιαφέρει μια φανέλα 👕',waItem:'Θέλω αυτή τη φανέλα',waItemMsg:'Γεια! Με ενδιαφέρει η φανέλα: ',search:'Αναζήτηση ομάδας...',countSuffix:'φανέλες',footer:'© 2026 Κατάλογος Φανελών Ποδοσφαίρου · Όλα τα δικαιώματα διατηρούνται',founders:'Ιδρυτές:',cats:{all:'Όλες',clubes2627:'Σύλλογοι 26-27',clubes2526:'Σύλλογοι 25-26',mundial:'Παγκόσμιο Κύπελλο 2026',retro:'Ρέτρο'},catLabels:{clubes2627:'Σύλλογοι 26-27',clubes2526:'Σύλλογοι 25-26',mundial:'Παγκόσμιο Κύπελλο 2026',retro:'Ρέτρο'},badges:{home:'Εντός έδρας',away:'Εκτός έδρας',third:'3η Εμφάνιση',other:'Ειδική'},empty:'Δεν βρέθηκαν φανέλες'}
+};
+let lang='es',currentCat='all',currentSearch='';
+const allShirts=[
+  {id:'1HASM8f7sZUn4qPRSxhftgbj3nbvd-yG4',es:'Real Madrid Local',en:'Real Madrid Home',gr:'Ρεάλ Μαδρίτης Εντός',cat:'clubes2627'},
+  {id:'1cTzBaJdXjqb3WtmKYlfgWMpf-I_ZOnaY',es:'Man City Local',en:'Man City Home',gr:'Μάντσεστερ Σίτι Εντός',cat:'clubes2627'},
+  {id:'1DRe130Rrdp-nMgso82LPpVpc7ZP4deUM',es:'Arsenal Local',en:'Arsenal Home',gr:'Άρσεναλ Εντός',cat:'clubes2627'},
+  {id:'1nwW_m3bUemRid8bNJALppxXxvS0wwCfT',es:'Real Madrid Local',en:'Real Madrid Home',gr:'Ρεάλ Μαδρίτης Εντός',cat:'clubes2526'},
+  {id:'1hjRUpg-9DLZFwooIqpGobQMmrYaYFhA0',es:'Real Madrid Visitante',en:'Real Madrid Away',gr:'Ρεάλ Μαδρίτης Εκτός',cat:'clubes2526'},
+  {id:'1u3Z-iLK-RLBna2_koaAP-8kHorp6ntND',es:'Barcelona Local',en:'Barcelona Home',gr:'Βαρκελώνη Εντός',cat:'clubes2526'},
+  {id:'1N7FwiPClEjrZfblJzCT87AnM6YsoQkEy',es:'Barcelona Visitante',en:'Barcelona Away',gr:'Βαρκελώνη Εκτός',cat:'clubes2526'},
+  {id:'1gY0SRM_8ziciTExXE1OxeXyFWQ2ypTkj',es:'Atletico Madrid Local',en:'Atletico Madrid Home',gr:'Ατλέτικο Μαδρίτης Εντός',cat:'clubes2526'},
+  {id:'1zgZTP_7FH6Ex86ezgfxZpfS0lL_J2n1I',es:'Atletico Madrid Visitante',en:'Atletico Madrid Away',gr:'Ατλέτικο Μαδρίτης Εκτός',cat:'clubes2526'},
+  {id:'1BUtQ0R6MV5EUCEyG0YPR6P49T_BAIOAI',es:'Man United Local',en:'Man United Home',gr:'Μάντσεστερ Γιουνάιτεντ Εντός',cat:'clubes2526'},
+  {id:'1FNwX6FuMHftSSWnKqRnb5lPSN43oqgy4',es:'Man United Visitante',en:'Man United Away',gr:'Μάντσεστερ Γιουνάιτεντ Εκτός',cat:'clubes2526'},
+  {id:'12-_IpMST8OZVLLXPphxFQwcsX2S446Z0',es:'Liverpool Local',en:'Liverpool Home',gr:'Λίβερπουλ Εντός',cat:'clubes2526'},
+  {id:'1-oZkv4w9JAoHGKyamHF0kd7iw39DSQw-',es:'Man City Local',en:'Man City Home',gr:'Μάντσεστερ Σίτι Εντός',cat:'clubes2526'},
+  {id:'1WX5_5OpXmkbGCHdcTCIseutd_75twhkv',es:'Man City Visitante',en:'Man City Away',gr:'Μάντσεστερ Σίτι Εκτός',cat:'clubes2526'},
+  {id:'1ZM8QuP-P6Wl0fyUssuU5_f4zJiT01THT',es:'Bayern Munich Local',en:'Bayern Munich Home',gr:'Μπάγερν Μονάχου Εντός',cat:'clubes2526'},
+  {id:'1f64_3JbgX8bXZIOCfXPZNkLqQ2MS2UuU',es:'PSG Local',en:'PSG Home',gr:'Παρί Σεν-Ζερμέν Εντός',cat:'clubes2526'},
+  {id:'1OQwlnWIfK7dZ_JFrdl-8xdWiz8oQ6ElV',es:'AC Milan Local',en:'AC Milan Home',gr:'Ας Μίλαν Εντός',cat:'clubes2526'},
+  {id:'1bWkvjaodrbK2KWScD2t_7f-3uTZ8pTz1',es:'AC Milan Visitante',en:'AC Milan Away',gr:'Ας Μίλαν Εκτός',cat:'clubes2526'},
+  {id:'1DLog5ZPl8Fqcmnsx49s9rGAgkuk6lMxq',es:'Arsenal Local',en:'Arsenal Home',gr:'Άρσεναλ Εντός',cat:'clubes2526'},
+  {id:'1r7zYd8SBmIqe8VTKcMagCEtQTmokg3m0',es:'Arsenal Visitante',en:'Arsenal Away',gr:'Άρσεναλ Εκτός',cat:'clubes2526'},
+  {id:'1Feh8zDiTXvPEqllSEQerQ1CXWl1G74S5',es:'River Plate Local',en:'River Plate Home',gr:'Ρίβερ Πλέιτ Εντός',cat:'clubes2526'},
+  {id:'1TAm0P8Szq6BAX5GjYoKVST5EidF1ZgDu',es:'River Plate Visitante',en:'River Plate Away',gr:'Ρίβερ Πλέιτ Εκτός',cat:'clubes2526'},
+  {id:'1NxX0xfNLr4kVW5klkhi7dOIxkj2uXEmX',es:'Boca Juniors Local',en:'Boca Juniors Home',gr:'Μπόκα Τζούνιορς Εντός',cat:'clubes2526'},
+  {id:'1gvI_49Zop37eSScoREgybcHn_rTwHqTp',es:'Corinthians Local',en:'Corinthians Home',gr:'Κορίνθιανς Εντός',cat:'clubes2526'},
+  {id:'1yQjrJFN4xM6cEYQAiXQJNkBtpoAaLdvo',es:'Corinthians Visitante',en:'Corinthians Away',gr:'Κορίνθιανς Εκτός',cat:'clubes2526'},
+  {id:'1L_V0HknABwI3sAmi8PHGwkYB2MsmzMcY',es:'Corinthians 24/25 Local',en:'Corinthians 24/25 Home',gr:'Κορίνθιανς 24/25 Εντός',cat:'clubes2526'},
+  {id:'17QPizGUNJX1emnqDJjH9OPOuDY_Ut4Zj',es:'Flamengo Local',en:'Flamengo Home',gr:'Φλαμένγκο Εντός',cat:'clubes2526'},
+  {id:'1Ymie7uDY5_pjniU-yGUs6w1TLBn5rKA6',es:'Santos Local',en:'Santos Home',gr:'Σάντος Εντός',cat:'clubes2526'},
+  {id:'1TQKzIC0CNRSP3SKwoGrQOyZk149fmhC4',es:'Santos Visitante',en:'Santos Away',gr:'Σάντος Εκτός',cat:'clubes2526'},
+  {id:'1SURdbIWBUHIdNAI5ZvctMxBs2dGs2-xX',es:'Inter Miami Local',en:'Inter Miami Home',gr:'Ίντερ Μαϊάμι Εντός',cat:'clubes2526'},
+  {id:'1PxPcupXp84dERkI2H5k-ICxBDq2w31zR',es:'Inter Miami Visitante',en:'Inter Miami Away',gr:'Ίντερ Μαϊάμι Εκτός',cat:'clubes2526'},
+  {id:'1OZIa7DKh2M6laJXjL7mRu7dbtEwUpZn8',es:'Olympique Lyon Local',en:'Olympique Lyon Home',gr:'Ολυμπίκ Λυών Εντός',cat:'clubes2526'},
+  {id:'1Yh92ExbdDxvdk7vO-As92jGamWDZkxNy',es:'Roma Local',en:'Roma Home',gr:'Ρόμα Εντός',cat:'clubes2526'},
+  {id:'13aYCivyN_iXRo7x3FDfmPmW8DcURMin5',es:'Brasil Local',en:'Brazil Home',gr:'Βραζιλία Εντός',cat:'mundial'},
+  {id:'16Ab-OtJ4Fj37DNs-euIMpzSy9u3o8B3v',es:'Brasil Visitante',en:'Brazil Away',gr:'Βραζιλία Εκτός',cat:'mundial'},
+  {id:'1p0oI4GoVBFyvKg13bS8fzMHiMVizgN8H',es:'Portugal Local',en:'Portugal Home',gr:'Πορτογαλία Εντός',cat:'mundial'},
+  {id:'1ei2x1Y3Zr1PQOagt6SHeu748P9YzfoVg',es:'Portugal Visitante',en:'Portugal Away',gr:'Πορτογαλία Εκτός',cat:'mundial'},
+  {id:'1zrSONPkCjsU0LTd1jAEuy7wMHCdW21U6',es:'Portugal Eusebio PV',en:'Portugal Eusebio Away',gr:'Πορτογαλία Ευσέβιο Εκτός',cat:'mundial'},
+  {id:'171gX95KDsiJapFh3NEutynzeo_njF_yh',es:'Portugal Eusebio FV',en:'Portugal Eusebio Home',gr:'Πορτογαλία Ευσέβιο Εντός',cat:'mundial'},
+  {id:'1I3ynY0Mi4f5aLBsOz4OtanfTrdDLI8Cm',es:'España Local',en:'Spain Home',gr:'Ισπανία Εντός',cat:'mundial'},
+  {id:'1XyWTx8H5vHIervmndydb4pp78DNG5x5I',es:'España Visitante',en:'Spain Away',gr:'Ισπανία Εκτός',cat:'mundial'},
+  {id:'1ZFOOw9388m6KOn1c_gbaDmclgD7VLIpG',es:'Inglaterra Local',en:'England Home',gr:'Αγγλία Εντός',cat:'mundial'},
+  {id:'1gTp69k-HiqNMB3OjmrK-OAZBjqvTCg6-',es:'Inglaterra Visitante',en:'England Away',gr:'Αγγλία Εκτός',cat:'mundial'},
+  {id:'1XUaJ3HylGpuzAwcU5ZkMMtiODysN3l4q',es:'Francia Visitante',en:'France Away',gr:'Γαλλία Εκτός',cat:'mundial'},
+  {id:'1h_PRx-TcSxBXYulLi1XFvJawnstXVarL',es:'Alemania Visitante',en:'Germany Away',gr:'Γερμανία Εκτός',cat:'mundial'},
+  {id:'1DPjKJ77V5CKcWPGM-Pz2l3LGMwvNAH1G',es:'Holanda Local',en:'Netherlands Home',gr:'Ολλανδία Εντός',cat:'mundial'},
+  {id:'1EWaoxDadEZ5tWkRgi8JK6tE8_adSeNrF',es:'Holanda Visitante',en:'Netherlands Away',gr:'Ολλανδία Εκτός',cat:'mundial'},
+  {id:'1Rlp5KyecGnNzzrLK0K8ud6_3g734xNj5',es:'Colombia Local',en:'Colombia Home',gr:'Κολομβία Εντός',cat:'mundial'},
+  {id:'1Ki9HZfIGXoNL-mzi-Z_pkA9wsShlKPA0',es:'Colombia Visitante',en:'Colombia Away',gr:'Κολομβία Εκτός',cat:'mundial'},
+  {id:'1d0-XJt4DW9JS03Sjs7uJVltM6l_WojsT',es:'Uruguay Local',en:'Uruguay Home',gr:'Ουρουγουάη Εντός',cat:'mundial'},
+  {id:'1huRxMJ2s2EF9aFu2iRWvYVSSzu6iaSgf',es:'Ecuador Local',en:'Ecuador Home',gr:'Εκουαδόρ Εντός',cat:'mundial'},
+  {id:'1Mgt1bHQqSRqLD6EtuUCbeSjrfZ1Ej9RV',es:'Ecuador Visitante',en:'Ecuador Away',gr:'Εκουαδόρ Εκτός',cat:'mundial'},
+  {id:'1hLzBBSRlunm_t5nvnL3J_rWdqi30HYDx',es:'Mexico Local',en:'Mexico Home',gr:'Μεξικό Εντός',cat:'mundial'},
+  {id:'1Ml3MErYWFKtL26_ovc3gOKZj9Oi-bX9w',es:'Mexico Visitante',en:'Mexico Away',gr:'Μεξικό Εκτός',cat:'mundial'},
+  {id:'1tTYpSO8fRyzLvX36GgGQHRfh2aEFsLPg',es:'Mexico 3era',en:'Mexico 3rd Kit',gr:'Μεξικό 3η Εμφάνιση',cat:'mundial'},
+  {id:'1u2xHrBMA73JB9mPR-Y8t00NROxa20BhS',es:'Canada Local',en:'Canada Home',gr:'Καναδάς Εντός',cat:'mundial'},
+  {id:'1iFbR1LR0qnp3qbnrxxr2_mgRg2_heui_',es:'Estados Unidos Visitante',en:'USA Away',gr:'ΗΠΑ Εκτός',cat:'mundial'},
+  {id:'1Rg2sBAVYmEjPD-xodSBrHFylTaUPbG3y',es:'Japon Local',en:'Japan Home',gr:'Ιαπωνία Εντός',cat:'mundial'},
+  {id:'1l__JuFsfX0jAW2DEK_jHPBzBIALvfWyv',es:'Japon Visitante',en:'Japan Away',gr:'Ιαπωνία Εκτός',cat:'mundial'},
+  {id:'1E6fOlMnijlz4AY9F9E1o81zUXzZUfvi_',es:'Corea del Sur Visitante',en:'South Korea Away',gr:'Νότια Κορέα Εκτός',cat:'mundial'},
+  {id:'1kxz1UaWu7ErkOWEaNYBxDa2wSl1KjP3F',es:'Suiza Visitante',en:'Switzerland Away',gr:'Ελβετία Εκτός',cat:'mundial'},
+  {id:'18CLMS4CR65ePy0iKupeyk45nLNXdYfgH',es:'Grecia Local',en:'Greece Home',gr:'Ελλάδα Εντός',cat:'mundial'},
+  {id:'1_3wuKFGVie6KpH8VqGCjCRjb-6HPphEK',es:'Grecia Visitante',en:'Greece Away',gr:'Ελλάδα Εκτός',cat:'mundial'},
+  {id:'1c_p4aUp_2a6Ejf8Jq2eLwt8LZ9U9V3gC',es:'Suiza Local',en:'Switzerland Home',gr:'Ελβετία Εντός',cat:'mundial'},
+  {id:'1CyxAWCzBXaFaqpd_naNVcKmGNRpf4njG',es:'Belgica Local',en:'Belgium Home',gr:'Βέλγιο Εντός',cat:'mundial'},
+  {id:'1CkAmo_BPkTdugJoKoB2IT_O2bOuKLNdw',es:'Venezuela Local',en:'Venezuela Home',gr:'Βενεζουέλα Εντός',cat:'mundial'},
+  {id:'1seTkIVhHn8EK-oLKzE3u5on7FphCIZ46',es:'Barcelona 08-09 Local',en:'Barcelona 08-09 Home',gr:'Βαρκελώνη 08-09 Εντός',cat:'retro'},
+  {id:'1sQAeecdLP2V9JnF2JeSSvQPRw4iDEmca',es:'Barcelona 08-09 Visitante',en:'Barcelona 08-09 Away',gr:'Βαρκελώνη 08-09 Εκτός',cat:'retro'},
+  {id:'1OcSs0IGwMAbfeVF6vz9gCG-aVxZEJwPs',es:'Barcelona 07-08 Local',en:'Barcelona 07-08 Home',gr:'Βαρκελώνη 07-08 Εντός',cat:'retro'},
+  {id:'1SWkzwl8fZeKb2NR85cdsKORZx8XN8Kvc',es:'Barcelona 10-11 Local',en:'Barcelona 10-11 Home',gr:'Βαρκελώνη 10-11 Εντός',cat:'retro'},
+  {id:'1ZxxSSNhotvgqX1JqVfLD9m5_V5etavgI',es:'Barcelona 10-11 Visitante',en:'Barcelona 10-11 Away',gr:'Βαρκελώνη 10-11 Εκτός',cat:'retro'},
+  {id:'1FT5oPnKr-X5heT_1O_SA8QjQPyln7tyR',es:'Barcelona 11-12 Visitante',en:'Barcelona 11-12 Away',gr:'Βαρκελώνη 11-12 Εκτός',cat:'retro'},
+  {id:'1CdqtqlphMY8QlETKelwlFSfieEud8-V_',es:'Barcelona 12-13 Local',en:'Barcelona 12-13 Home',gr:'Βαρκελώνη 12-13 Εντός',cat:'retro'},
+  {id:'1WsrtfDnvHkPnuUZ9TRu7B7T0qzg3wzTv',es:'Barcelona 13-14 3era',en:'Barcelona 13-14 3rd Kit',gr:'Βαρκελώνη 13-14 3η Εμφάνιση',cat:'retro'},
+  {id:'1VKQz00fB9wPvynDrUE6YiA6I6XXAP4GZ',es:'Barcelona 14-15 Local',en:'Barcelona 14-15 Home',gr:'Βαρκελώνη 14-15 Εντός',cat:'retro'},
+  {id:'1vA0e07N5UT8G8tFV18wt0rTkW509rS0u',es:'Barcelona 14-15 3era',en:'Barcelona 14-15 3rd Kit',gr:'Βαρκελώνη 14-15 3η Εμφάνιση',cat:'retro'},
+  {id:'1jx01mxNbQyNZs9uLC311PZaljbDHWu4A',es:'Barcelona 15-16 Local',en:'Barcelona 15-16 Home',gr:'Βαρκελώνη 15-16 Εντός',cat:'retro'},
+  {id:'1SZtVVeylGDVXsVtZWJ1veundVawmmyKO',es:'Barcelona 16-17 Local',en:'Barcelona 16-17 Home',gr:'Βαρκελώνη 16-17 Εντός',cat:'retro'},
+  {id:'1N-XiqJnN0h07Z5bqal_V2MUQT0iKwPH_',es:'Barcelona 98 Visitante',en:'Barcelona 98 Away',gr:'Βαρκελώνη 98 Εκτός',cat:'retro'},
+  {id:'18ytZ7MLyYzGppKS0b-8f7Y1cDsOs7c42',es:'Barcelona 03-04 Visitante',en:'Barcelona 03-04 Away',gr:'Βαρκελώνη 03-04 Εκτός',cat:'retro'},
+  {id:'1arXUZAw_wLtc7f3CW2WQFgFXBN48jb2G',es:'Real Madrid 09-10 Local',en:'Real Madrid 09-10 Home',gr:'Ρεάλ Μαδρίτης 09-10 Εντός',cat:'retro'},
+  {id:'1O6-v2Q72fCuB6SH_LNSXcKPG_WgT_TiA',es:'Real Madrid 10-11 Local',en:'Real Madrid 10-11 Home',gr:'Ρεάλ Μαδρίτης 10-11 Εντός',cat:'retro'},
+  {id:'1NJga2nAtDaLyW4JE7LJ9zO6q8MZIe9mm',es:'Real Madrid 11-12 Local',en:'Real Madrid 11-12 Home',gr:'Ρεάλ Μαδρίτης 11-12 Εντός',cat:'retro'},
+  {id:'1vs7SeRkEDtdYKKA9KhBnvfje2iSDqgG4',es:'Real Madrid 11-12 Visitante',en:'Real Madrid 11-12 Away',gr:'Ρεάλ Μαδρίτης 11-12 Εκτός',cat:'retro'},
+  {id:'1ZyERJnOhcVXY2YYS6C-3ifARAAsybRZY',es:'Real Madrid 13-14 Local',en:'Real Madrid 13-14 Home',gr:'Ρεάλ Μαδρίτης 13-14 Εντός',cat:'retro'},
+  {id:'1pNZD6CaYAus-6h22nVcbYgoT_ZnOJIxY',es:'Real Madrid 16-17 Visitante',en:'Real Madrid 16-17 Away',gr:'Ρεάλ Μαδρίτης 16-17 Εκτός',cat:'retro'},
+  {id:'1q_lf9kc1wG-a6tjMiiqK1z80vvmWUqVO',es:'Real Madrid 94-96 Local',en:'Real Madrid 94-96 Home',gr:'Ρεάλ Μαδρίτης 94-96 Εντός',cat:'retro'},
+  {id:'1tbkvEoaA0OVQYoRsOd-4io9qDygabWsV',es:'Real Madrid 98-00 Local',en:'Real Madrid 98-00 Home',gr:'Ρεάλ Μαδρίτης 98-00 Εντός',cat:'retro'},
+  {id:'1lGXzwh-QiejJ9cFKOJ1xkBLJV4XU0Znc',es:'Real Madrid 00-01 Local',en:'Real Madrid 00-01 Home',gr:'Ρεάλ Μαδρίτης 00-01 Εντός',cat:'retro'},
+  {id:'1LV0zrnm0eYkGboS8NkGPR4WtMWiyUiHl',es:'Atletico Madrid 94-95 Local',en:'Atletico Madrid 94-95 Home',gr:'Ατλέτικο Μαδρίτης 94-95 Εντός',cat:'retro'},
+  {id:'1CLu-65KRt4RvCZDc2tjarHlKrxLUNwDj',es:'Atletico Madrid 04-05 Visitante',en:'Atletico Madrid 04-05 Away',gr:'Ατλέτικο Μαδρίτης 04-05 Εκτός',cat:'retro'},
+  {id:'19tHWX7czrVroovbW_OKVp_ETgzEU4HqF',es:'Atletico Madrid 13-14 Visitante',en:'Atletico Madrid 13-14 Away',gr:'Ατλέτικο Μαδρίτης 13-14 Εκτός',cat:'retro'},
+  {id:'1UskIuzXuzSrNvpJWo-WtW7BiYDDvxrK2',es:'Arsenal 08-10 Local',en:'Arsenal 08-10 Home',gr:'Άρσεναλ 08-10 Εντός',cat:'retro'},
+  {id:'1LXmCidJKm95ERUmIMMuzjUhhVQAXWzcU',es:'Arsenal 04-05 Local',en:'Arsenal 04-05 Home',gr:'Άρσεναλ 04-05 Εντός',cat:'retro'},
+  {id:'1X8Jc81xvdDLfkNFSSPfuZ60KdtXEKJKF',es:'Arsenal 07-08 Visitante',en:'Arsenal 07-08 Away',gr:'Άρσεναλ 07-08 Εκτός',cat:'retro'},
+  {id:'1xtYXc3bT0xYdj2aPznBR43h7LC48L-gl',es:'Arsenal 07-08 3era',en:'Arsenal 07-08 3rd Kit',gr:'Άρσεναλ 07-08 3η Εμφάνιση',cat:'retro'},
+  {id:'12FhrShnzVlrjEc_9-pgVgZgrY2XZ3g-E',es:'Chelsea 11-12 Local',en:'Chelsea 11-12 Home',gr:'Τσέλσι 11-12 Εντός',cat:'retro'},
+  {id:'1d63G6o9uM-gD75YRygyQyaIrBB_ksrQd',es:'Chelsea 12-13 Local',en:'Chelsea 12-13 Home',gr:'Τσέλσι 12-13 Εντός',cat:'retro'},
+  {id:'1wLbfUYUzjNDpXBghlWJPiq5zT-KRpKKH',es:'Chelsea 12-13 3era',en:'Chelsea 12-13 3rd Kit',gr:'Τσέλσι 12-13 3η Εμφάνιση',cat:'retro'},
+  {id:'1VLESyhtuh3-jhsjZJ05eATafDgu3b9Xa',es:'Bayern Munich 97-98',en:'Bayern Munich 97-98',gr:'Μπάγερν Μονάχου 97-98',cat:'retro'},
+  {id:'1Q74dsOogQVjWUu08fDSJlzy0vxVAAlzy',es:'Bayern Munich 00-01',en:'Bayern Munich 00-01',gr:'Μπάγερν Μονάχου 00-01',cat:'retro'},
+  {id:'1fKRmqECnv9R2LxmvifA50uMLOQKH445N',es:'Bayern Munich 98-00 Visitante',en:'Bayern Munich 98-00 Away',gr:'Μπάγερν Μονάχου 98-00 Εκτός',cat:'retro'},
+  {id:'1bOarUXVrxQSnAfLNYPeOhbHlzgnJk8qo',es:'AC Milan 10-11 Local',en:'AC Milan 10-11 Home',gr:'Ας Μίλαν 10-11 Εντός',cat:'retro'},
+  {id:'1T8VfDJBm_erEuFrZpUT8yLAHFjpopNUD',es:'AC Milan 03-04 Visitante',en:'AC Milan 03-04 Away',gr:'Ας Μίλαν 03-04 Εκτός',cat:'retro'},
+  {id:'145y3EQ396XtrM81b4VPDe18r-f4mFxa0',es:'Inter Milan 10-11 Local',en:'Inter Milan 10-11 Home',gr:'Ίντερ Μιλάνο 10-11 Εντός',cat:'retro'},
+  {id:'1fDHwIqRx6zfOQAkJJ45eSS3nnqyVUnWy',es:'Inter Milan 01-02 Local',en:'Inter Milan 01-02 Home',gr:'Ίντερ Μιλάνο 01-02 Εντός',cat:'retro'},
+  {id:'1vaPNT_MOnNZ8vdbmA0Aa_Tqthdcufsle',es:'Man United 07-08',en:'Man United 07-08',gr:'Μάντσεστερ Γιουνάιτεντ 07-08',cat:'retro'},
+  {id:'1uvsAgrpez-nNs3SMh3MN0ksmlZtDlWnH',es:'Francia 98 Local',en:'France 98 Home',gr:'Γαλλία 98 Εντός',cat:'retro'},
+  {id:'1-wj94cYgcEYUeDlDgU1ZIwYevnmNSJOi',es:'Francia 98 Visitante',en:'France 98 Away',gr:'Γαλλία 98 Εκτός',cat:'retro'},
+  {id:'1hunQjBjaxonHxIIRLUNturOeyj8Bh4wU',es:'Brasil 02 Local',en:'Brazil 02 Home',gr:'Βραζιλία 02 Εντός',cat:'retro'},
+  {id:'1F_7wUFQRQ6-QISkqhDE72eKdjKGGnATT',es:'Valencia 03-04 Local',en:'Valencia 03-04 Home',gr:'Βαλένθια 03-04 Εντός',cat:'retro'},
+  {id:'1L2x3mpMysgTZI9g0FDVYimt3uP53_dBo',es:'Valencia 06-07 Visitante',en:'Valencia 06-07 Away',gr:'Βαλένθια 06-07 Εκτός',cat:'retro'},
+  {id:'16tSRv7dSOTfXGHh1ALpDWNMN-rLMxG3N',es:'Real Betis 99-00 Local',en:'Real Betis 99-00 Home',gr:'Ρεάλ Μπέτις 99-00 Εντός',cat:'retro'},
+  {id:'1WGe6vw4ERzZBWePgttOPmHxWWv_RxXaV',es:'Real Betis 95-97 Local',en:'Real Betis 95-97 Home',gr:'Ρεάλ Μπέτις 95-97 Εντός',cat:'retro'},
+  {id:'1_rYajSYnUwchLo_-uLXs6RuAMTXLs4Ji',es:'Sporting CP 01-03 Local',en:'Sporting CP 01-03 Home',gr:'Σπόρτινγκ ΣΠ 01-03 Εντός',cat:'retro'},
+  {id:'1j6udB2170zKeibNNlpImNB6NNPoW3iYh',es:'Sporting CP 01-03 Manga',en:'Sporting CP 01-03 Long Sleeve',gr:'Σπόρτινγκ ΣΠ 01-03 Μακρυμάνικο',cat:'retro'},
+];
+
+function getName(s){return s[lang]||s.es;}
+function getCatLabel(cat){return T[lang].catLabels[cat]||cat;}
+function getBadgeClass(name){const n=name.toLowerCase();if(n.includes('3era')||n.includes('3rd')||n.includes('3η'))return 'badge-third';if(n.includes('visitante')||n.includes('away')||n.includes('εκτός'))return 'badge-away';if(n.includes('local')||n.includes('home')||n.includes('εντός')||n.includes('manga')||n.includes('sleeve')||n.includes('μακρυ'))return 'badge-home';return 'badge-other';}
+function getBadgeText(name){const n=name.toLowerCase();if(n.includes('3era')||n.includes('3rd')||n.includes('3η'))return T[lang].badges.third;if(n.includes('visitante')||n.includes('away')||n.includes('εκτός'))return T[lang].badges.away;if(n.includes('local')||n.includes('home')||n.includes('εντός')||n.includes('manga')||n.includes('sleeve')||n.includes('μακρυ'))return T[lang].badges.home;return T[lang].badges.other;}
+function getFiltered(){return allShirts.filter(s=>{const matchCat=currentCat==='all'||s.cat===currentCat;const matchSearch=getName(s).toLowerCase().includes(currentSearch.toLowerCase());return matchCat&&matchSearch;});}
+function renderGrid(items){
+  const grid=document.getElementById('grid');
+  document.getElementById('count').textContent=items.length+' '+T[lang].countSuffix;
+  if(!items.length){grid.innerHTML='<div class="empty">'+T[lang].empty+'</div>';return;}
+  grid.innerHTML=items.map(s=>{
+    const name=getName(s);
+    return `<div class="card" onclick="openLightbox('${s.id}','${name.replace(/'/g,"\'")}','${getCatLabel(s.cat).replace(/'/g,"\'")}')">
+      <div class="card-img-wrap">
+        <img src="${DRIVE_IMG(s.id)}" alt="${name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"/>
+        <div class="card-placeholder">⚽</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">${name}</div>
+        <div class="card-cat">${getCatLabel(s.cat)}</div>
+        <span class="badge ${getBadgeClass(name)}">${getBadgeText(name)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+function updateUI(){
+  const heroSub=document.getElementById('heroSub');
+  const lbSizesTitle=document.getElementById('lb-sizes-title');
+  const lbSizesNote=document.getElementById('lb-sizes-note');
+  if(lbSizesTitle) lbSizesTitle.textContent=T[lang].sizesTitle;
+  if(lbSizesNote) lbSizesNote.textContent=T[lang].sizesNote;
+  const heroCta=document.getElementById('heroCta');
+  if(heroSub) heroSub.textContent=T[lang].heroSub;
+  if(heroCta) heroCta.textContent=T[lang].heroCta;
+  const t=T[lang];
+  // ig button is static
+  // ig button is static
+  document.getElementById('searchInput').placeholder=t.search;
+  document.getElementById('lb-wa-text').textContent=t.waItem;
+  document.getElementById('footerText').textContent=t.footer;
+  document.getElementById('foundersText').innerHTML=t.founders+' <span>Lucca &amp; Tasos</span>';
+  const catKeys=['all','clubes2627','clubes2526','mundial','retro'];
+  document.querySelectorAll('.filter-btn').forEach((btn,i)=>{btn.textContent=t.cats[catKeys[i]];});
+  document.querySelectorAll('.lang-opt').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.lang-opt').forEach(b=>{b.classList.toggle('active', b.getAttribute('onclick').includes("'"+lang+"'"));});
+  renderGrid(getFiltered());
+}
+function setLang(l){lang=l;updateUI();}
+function filter(cat,btn){currentCat=cat;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderGrid(getFiltered());}
+function doSearch(val){currentSearch=val;renderGrid(getFiltered());}
+function openLightbox(id,name,catLabel){
+  document.getElementById('lb-img').src=DRIVE_IMG(id);
+  document.getElementById('lb-title').textContent=name;
+  document.getElementById('lb-cat').textContent=catLabel;
+  document.getElementById('lb-wa-text').textContent=T[lang].waItem;
+  const msg=encodeURIComponent(T[lang].waItemMsg+name+' 👕');
+  // ig button is static
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(e){
+  if(e&&e.target!==document.getElementById('lightbox')&&e.currentTarget?.tagName!=='BUTTON')return;
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox({target:document.getElementById('lightbox')});});
+
+// Hero slideshow
+(function(){
+  // Para añadir más fotos: sube el archivo a GitHub y añade el nombre aquí
+  const IMGS=[
+  "bbc.jpg",
+  "cr7.jpg",
+  "lamine.jpg",
+  "messicami.jpg",
+  "msn.jpg",
+  "olise.jpg",
+  "pedri.jpg",
+  "vincius.jpg"
+  ];
+  const bg=document.getElementById('heroBg');
+  const slides=IMGS.map((src,i)=>{
+    const d=document.createElement('div');
+    d.className='hero-slide'+(i===0?' active':'');
+    d.style.backgroundImage='url('+src+')';
+    d.style.animationDelay=(i*2)+'s';
+    bg.appendChild(d); return d;
+  });
+  let cur=0;
+  setInterval(()=>{
+    slides[cur].classList.remove('active');
+    cur=(cur+1)%slides.length;
+    slides[cur].classList.add('active');
+  },3500);
+})();
+
+// Header height
+(function(){
+  const h=document.querySelector('header');
+  const setH=()=>{document.querySelector('.hero').style.paddingTop=h.offsetHeight+'px';};
+  setH(); window.addEventListener('resize',setH); setTimeout(setH,400);
+})();
+
+// Smooth scroll
+function smoothScroll(){
+  const target=document.getElementById('catalog');
+  if(!target) return;
+  const start=window.scrollY;
+  const end=target.getBoundingClientRect().top+window.scrollY;
+  const dur=950; const t0=performance.now();
+  const ease=t=>t<0.5?2*t*t:-1+(4-2*t)*t;
+  document.body.style.overflow='hidden';
+  (function step(now){
+    const p=Math.min((now-t0)/dur,1);
+    window.scrollTo(0,start+(end-start)*ease(p));
+    if(p<1){requestAnimationFrame(step);}
+    else{document.body.style.overflow='';}
+  })(t0);
+}
+
+function showSize(type){
+  document.getElementById('table-fans').style.display=type==='fans'?'block':'none';
+  document.getElementById('table-player').style.display=type==='player'?'block':'none';
+  document.getElementById('btn-fans').style.background=type==='fans'?'#00c853':'transparent';
+  document.getElementById('btn-fans').style.color=type==='fans'?'#000':'#aaa';
+  document.getElementById('btn-fans').style.borderColor=type==='fans'?'#00c853':'#333';
+  document.getElementById('btn-player').style.background=type==='player'?'#00c853':'transparent';
+  document.getElementById('btn-player').style.color=type==='player'?'#000':'#aaa';
+  document.getElementById('btn-player').style.borderColor=type==='player'?'#00c853':'#333';
+}
+
+updateUI();
+</script>
+</body>
+</html>
